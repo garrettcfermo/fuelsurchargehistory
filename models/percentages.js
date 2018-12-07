@@ -11,6 +11,6 @@ var PercentageSchema = new Schema({
   percentage: Number
 });
 
-var percentages = mongoose.model("percentages", PercentageSchema);
+var Percentages = mongoose.model("percentages", PercentageSchema);
 
-module.exports = percentages;
+module.exports = Percentages;

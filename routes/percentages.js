@@ -5,11 +5,15 @@ const moment = require('moment')
 
 
 module.exports = app => {
-  // app.get('/surfboards', (req, res) => {
-  //   db.surfboards.findAll({})
-  //     .then(r => res.json(r))
-  //     .catch(e => console.log(e))
-  // })
+  app.get('/percentages', (req, res) => {
+    db.find({
+      effective_date: {$gte: '2018-12-10'},
+      indicator:"EXPRESS",
+      vendor_name:"FEDEX"
+    })
+      .then(r => res.json(r))
+      .catch(e => console.log(e))
+  })
 
   // app.get('/surfboards/:id', (req, res) => {
   //   db.surfboards.findOne({ where: { id: req.params.id } })
