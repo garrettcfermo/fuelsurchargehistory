@@ -1,12 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Fuel Surcharge History</title>
+
+  <!-------------------- Style Sheets ----------------------->
+  <link rel="stylesheet" href="./assets/css/reset.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+
 </head>
+
 <body>
-  <h1>Fuck Yea it works!</h1>
+
+  <!-- Jumbotron-->
+  <div class="container jumbotron">
+    <h4 style="font-family: 'Crete Round', serif; text-decoration: underline; font-size:40px;">FedEx Fuel Surcharge</h4>
+    <a class="waves-effect waves-light btn btn-small blue-grey darken-2 modal-trigger" href="#modal"><i class="material-icons">date_range</i></a>
+    <a class="waves-effect waves-light btn btn-small green darken-2 modal-trigger" href="#modal1"><i class="material-icons">sync</i></a>
+    <hr>
+  </div>
+
+
+  <!-- Scrap Data Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Update Results</h4>
+      <p>We have Updated the Fuel Surcharge Table</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-grey btn btn-small right blue-grey">Close</a>
+    </div>
+  </div>
+  
+  <!-- Date Filter Modal Structure -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h4>Date Filter</h4>
+      <p style="margin-bottom: 20px;">Please select a Date Range or custom dates</p>
+      <div class="date-filter">
+        <div class="row">
+          <div class="s12 input-field">
+            <p>Start Date</p>
+            <input onchange="customDate()" id="startDate" type="date" class="datepicker" placeholder="">
+          </div>
+        </div>
+        <div class="row">
+          <div class="s12 input-field">
+            <p>End Date</p>
+            <input onchange="customDate()" id="endDate" type="date" class="datepicker" placeholder="">
+          </div>
+        </div>
+        <div class="row" id="invalidDate" style="color:red"></div>
+      </div>
+      <div class="center">
+        <a href="#!" class="modal-close waves-effect waves-green btn green darken-2">Apply</a>
+        <a href="#!" class="modal-close waves-effect waves-gray btn blue-grey">Close</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Section -->
+  <div class="container">
+    <canvas style="margin-top:30px" id="myChart" width="400" height="300"></canvas>
+  </div>
+
+  <!-- Table Section -->
+  <div class="container">
+    <table class="centered">
+      <thead>
+        <tr>
+          <th class="effectiveDate">Effective Date</th>
+          <th>Express</th>
+          <th>Ground</th>
+          <th>Intl Export</th>
+          <th>Intl Import</th>
+          <th class="edit">Update</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="effectiveDate">2018-12-03</td>
+          <td>5%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>8%</td>
+          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
+                class="material-icons">edit</i></a>
+          </td>
+        </tr>
+        <tr>
+          <td class="effectiveDate">2018-12-03</td>
+          <td>5%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>8%</td>
+          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
+                class="material-icons">edit</i></a>
+          </td>
+        </tr>
+        <tr>
+          <td class="effectiveDate">2018-12-03</td>
+          <td>5%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>8%</td>
+          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
+                class="material-icons">edit</i></a>
+          </td>
+        </tr>
+        <tr>
+          <td class="effectiveDate">2018-12-03</td>
+          <td>5%</td>
+          <td>6%</td>
+          <td>7%</td>
+          <td>8%</td>
+          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
+                class="material-icons">edit</i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Update Modal Structure -->
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <h4>Edit</h4>
+      <p style="margin-bottom: 20px;">Please edit the informaton below:</p>
+      <p style="margin-bottom: 20px;">Effective Date : 2018-12-03</p>
+
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s6">
+              <input value="5%" id="icon_prefix" type="text" class="validate">
+              <label for="icon_prefix">Express</label>
+            </div>
+            <div class="input-field col s6">
+              <input value="6%" id="icon_telephone" type="tel" class="validate">
+              <label for="icon_telephone">Ground</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6">
+              <input value="5%" id="icon_prefix" type="text" class="validate">
+              <label for="icon_prefix">International Export</label>
+            </div>
+            <div class="input-field col s6">
+              <input value="6%" id="icon_telephone" type="tel" class="validate">
+              <label for="icon_telephone">International Import</label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="center">
+        <a href="#!" class="modal-close waves-effect waves-green btn green darken-2">Save</a>
+        <a href="#!" class="modal-close waves-effect waves-gray btn blue-grey">Close</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-------------------- Java Scripts ----------------------->
+  <!-- Materialize -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
+  <!-- Moment JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+
+  <!-- Chart JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+
+  <!-- Ajax JS -->
+  <script src="./assets/js/index.js"></script>
+
+  <script>
+    // Graph()
+    function Graph() {
+      Chart.defaults.global.defaultFontColor = 'black'
+      new Chart(document.getElementById("myChart"), {
+        type: 'line',
+        legendText: "cross",
+        data: {
+          labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+          datasets: [{
+            data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
+            label: "Express",
+            borderColor: "#86B281",
+            backgroundColor: "#86b281",
+            fill: false
+          }, {
+            data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 5267],
+            label: "Ground",
+            borderColor: "#bc8d88",
+            backgroundColor: "#bc8d88",
+            fill: false
+          }, {
+            data: [168, 170, 178, 190, 203, 276, 408, 547, 675, 734],
+            label: "Intl Export",
+            borderColor: "#9DB3D5",
+            backgroundColor: "#9DB3D5",
+            fill: false
+          }, {
+            data: [40, 20, 10, 16, 24, 38, 74, 167, 508, 784],
+            label: "Intl Import",
+            borderColor: "#637885",
+            backgroundColor: "#637885",
+            fill: false
+          }]
+        },
+        options: {
+          legend: {
+            position: 'bottom',
+            markerColor: "circle"
+          }
+        }
+      })
+    }
+
+    Graph()
+
+    $(document).ready(function () {
+      $('.modal').modal()
+    })
+  </script>
+
 </body>
+
 </html>

@@ -1,0 +1,33 @@
+.jumbotron {
+  width: auto;
+  text-align: center;
+}
+
+body {
+  background-color: lightgray
+}
+
+tr {
+  border: 1px solid black;
+}
+
+th {
+  font-weight: bold;
+}
+
+table {
+  margin-bottom: 20px;
+}
+
+.effectiveDate{
+  border: 1px solid black;
+}
+
+.edit {
+  width: 10px;;
+  border-left: 1px solid black;
+}
+
+#myChart {
+  margin-bottom: 20px;
+}
