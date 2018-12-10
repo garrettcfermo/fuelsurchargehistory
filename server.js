@@ -4,7 +4,8 @@ const path = require('path')
 const mongoose = require('mongoose')
 
 const app = express()
-mongoose.connect('mongodb://localhost/fuelhistorydb', { useNewUrlParser: true })
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/fuelhistorydb";
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyparser.urlencoded({ extended: true }))

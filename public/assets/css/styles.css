@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: lightgray
+  background-color: rgb(236, 235, 235)
 }
 
 tr {
@@ -13,6 +13,8 @@ tr {
 
 th {
   font-weight: bold;
+  background-color: rgb(102, 100, 100);
+  color:white
 }
 
 table {
@@ -31,3 +33,4 @@ table {
 #myChart {
   margin-bottom: 20px;
 }
+
