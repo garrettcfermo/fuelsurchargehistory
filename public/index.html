@@ -22,22 +22,23 @@
   <div class="container jumbotron">
     <h4 style="font-family: 'Crete Round', serif; text-decoration: underline; font-size:40px;">FedEx Fuel Surcharge</h4>
     <a class="waves-effect waves-light btn btn-small blue-grey darken-2 modal-trigger" href="#modal"><i class="material-icons">date_range</i></a>
-    <a class="waves-effect waves-light btn btn-small green darken-2 modal-trigger" href="#modal1"><i class="material-icons">sync</i></a>
+    <a onclick="updateFSC()" class="waves-effect waves-light btn btn-small green darken-2 modal-trigger" href="#modal1"><i
+        class="material-icons">sync</i></a>
     <hr>
   </div>
-
 
   <!-- Scrap Data Modal Structure -->
   <div id="modal1" class="modal">
     <div class="modal-content">
       <h4>Update Results</h4>
-      <p>We have Updated the Fuel Surcharge Table</p>
+      <hr>
+      <div class="resultInfo"></div>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-grey btn btn-small right blue-grey">Close</a>
+      <a href="#!" onclick="closeSync()" class="modal-close waves-effect waves-grey btn btn-small right blue-grey">Close</a>
     </div>
   </div>
-  
+
   <!-- Date Filter Modal Structure -->
   <div id="modal" class="modal">
     <div class="modal-content">
@@ -184,6 +185,86 @@
   <script src="./assets/js/index.js"></script>
 
   <script>
+
+    // Current Week
+    let startDate = moment().day(1).format("YYYYMMDD")
+    let endDate = moment().day(7).format("YYYYMMDD")
+
+    //Fetch the Fuel History Data from Database
+    function fuelhistoryData(startDate, endDate) {
+      fetch(`/percentages/${startDate}-${endDate}`)
+        .then(r => r.json())
+        .then(r => {
+          r.sort((a, b) => a.effective_date < b.effective_date ? 1 : -1)
+          console.log(r)
+        })
+        .catch(e => console.log(e))
+    }
+
+    fuelhistoryData(startDate, endDate)
+
+    //Web Scrap FedEx Fuel Percentage
+    function updateFSC() {
+      fetch(`/updatefsc`)
+        .then(r => r.json())
+        .then(r => {
+
+          // Sort Data Newest to Oldest
+          r.sort((a, b) => a.effective_date < b.effective_date ? 1 : -1)
+
+          // Result Logic/Output
+          if (r.length === 0) {
+            document.querySelector('.resultInfo').innerHTML =
+              `
+            Everything is up-to-date! The next avialable update will be on <br><br>
+            (${moment().day(5).format("dddd MM/DD/YYYY")}, 12:00PM PST) <br><br>
+            For the Date Range: <br><br>
+            ${moment().day(8).format("MM/DD/YYYY")} - ${moment().day(14).format("MM/DD/YYYY")}
+             `
+          } else {
+
+            let expressCount = 0
+            let groundCount = 0
+            let exportCount = 0
+            let importCount = 0
+            r.forEach(elem => {
+              switch(elem.indicator){
+                case 'EXPRESS':
+                expressCount++
+                break;
+                case 'GROUND':
+                groundCount++
+                break;
+                case 'INTL EXPORT':
+                exportCount++
+                break;
+                case 'INTL EXPORT':
+                importCount++
+                break;
+              }
+            })
+
+            document.querySelector('.resultInfo').innerHTML =
+              `
+            There were a total of ${r.length} records updated! Please is the update information below: <br><br>
+            Date Range: ${moment(r[r.length-1].effective_date).format("MM/DD/YYYY")} - ${moment(r[0].effective_date).format("MM/DD/YYYY")}<br><br>
+            Express: ${expressCount} <br><br>
+            Ground: ${groundCount} <br><br>
+            Intl Export: ${exportCount} <br><br>
+            Intl Import: ${importCount} <br><br>
+            `
+          }
+        })
+        .catch(e => console.log(e))
+    }
+    
+    // Cleans the Result Information 
+    function closeSync() {
+      document.querySelector('.resultInfo').innerHTML = ''
+    }
+
+
+
     // Graph()
     function Graph() {
       Chart.defaults.global.defaultFontColor = 'black'
@@ -229,6 +310,7 @@
 
     Graph()
 
+    // Materialize Code to make Modals Work
     $(document).ready(function () {
       $('.modal').modal()
     })
