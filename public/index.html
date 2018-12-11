@@ -48,19 +48,19 @@
         <div class="row">
           <div class="s12 input-field">
             <p>Start Date</p>
-            <input onchange="customDate()" id="startDate" type="date" class="datepicker" placeholder="">
+            <input id="customStartDate" type="date" class="datepicker" placeholder="">
           </div>
         </div>
         <div class="row">
           <div class="s12 input-field">
             <p>End Date</p>
-            <input onchange="customDate()" id="endDate" type="date" class="datepicker" placeholder="">
+            <input id="customEndDate" type="date" class="datepicker" placeholder="">
           </div>
         </div>
         <div class="row" id="invalidDate" style="color:red"></div>
       </div>
       <div class="center">
-        <a href="#!" class="modal-close waves-effect waves-green btn green darken-2">Apply</a>
+        <a href="#!" onclick="customDate()" class="modal-close waves-effect waves-green btn green darken-2">Apply</a>
         <a href="#!" class="modal-close waves-effect waves-gray btn blue-grey">Close</a>
       </div>
     </div>
@@ -185,7 +185,6 @@
   <script src="./assets/js/index.js"></script>
 
   <script>
-
     // Current Week
     let startDate = moment().day(1).format("YYYYMMDD")
     let endDate = moment().day(7).format("YYYYMMDD")
@@ -217,7 +216,7 @@
             document.querySelector('.resultInfo').innerHTML =
               `
             Everything is up-to-date! The next avialable update will be on <br><br>
-            (${moment().day(5).format("dddd MM/DD/YYYY")}, 12:00PM PST) <br><br>
+            ${moment().day(5).format("dddd MM/DD/YYYY")}, 12:00PM PST <br><br>
             For the Date Range: <br><br>
             ${moment().day(8).format("MM/DD/YYYY")} - ${moment().day(14).format("MM/DD/YYYY")}
              `
@@ -228,19 +227,19 @@
             let exportCount = 0
             let importCount = 0
             r.forEach(elem => {
-              switch(elem.indicator){
+              switch (elem.indicator) {
                 case 'EXPRESS':
-                expressCount++
-                break;
+                  expressCount++
+                  break;
                 case 'GROUND':
-                groundCount++
-                break;
+                  groundCount++
+                  break;
                 case 'INTL EXPORT':
-                exportCount++
-                break;
+                  exportCount++
+                  break;
                 case 'INTL EXPORT':
-                importCount++
-                break;
+                  importCount++
+                  break;
               }
             })
 
@@ -257,13 +256,24 @@
         })
         .catch(e => console.log(e))
     }
-    
+
     // Cleans the Result Information 
     function closeSync() {
       document.querySelector('.resultInfo').innerHTML = ''
     }
 
 
+    // Custom Date Filter
+    function customDate() {
+      let customStartDate = moment(document.querySelector('#customStartDate').value).format("YYYYMMDD")
+      let customEndDate = moment(document.querySelector('#customEndDate').value).format("YYYYMMDD")
+      if (customStartDate > customEndDate || customEndDate === "Invalid date" || customStartDate === "Invalid date") {
+        document.querySelector('#invalidDate').innerHTML = `Invalid Date. Please select a correct date range.`
+      } else {
+        fuelhistoryData(customStartDate,customEndDate)
+        document.querySelector('#invalidDate').innerHTML =''
+      }
+    }
 
     // Graph()
     function Graph() {
