@@ -186,7 +186,7 @@
 
   <script>
     // Current Week
-    let startDate = moment().day(1).format("YYYYMMDD")
+    let startDate = moment().startOf('month').format("YYYYMMDD")
     let endDate = moment().day(7).format("YYYYMMDD")
 
     //Fetch the Fuel History Data from Database
@@ -194,8 +194,38 @@
       fetch(`/percentages/${startDate}-${endDate}`)
         .then(r => r.json())
         .then(r => {
-          r.sort((a, b) => a.effective_date < b.effective_date ? 1 : -1)
-          console.log(r)
+          r.sort((a, b) => a.effective_date > b.effective_date ? 1 : -1)
+
+          let dateArr=[]
+          let expressArr=[]
+          let groundArr=[]
+          let exportArr =[]
+          let importArr= []
+
+        //
+        r.forEach(elem => {
+           if (dateArr.includes(elem.effective_date) === false) {
+            dateArr.push(elem.effective_date)
+          }
+          
+          switch(elem.indicator){
+            case 'EXPRESS':
+              expressArr.push(elem.percentage*100)
+            break;
+            case 'GROUND':
+              groundArr.push(elem.percentage * 100)
+            break;
+            case 'INTL EXPORT':
+              exportArr.push(elem.percentage * 100)
+            break;
+            case 'INTL IMPORT':
+              importArr.push(elem.percentage * 100)
+            break
+          }
+        })
+
+        Graph(dateArr,expressArr,groundArr,exportArr,importArr)
+
         })
         .catch(e => console.log(e))
     }
@@ -275,34 +305,34 @@
       }
     }
 
-    // Graph()
-    function Graph() {
+    // Graph Funcation
+    function Graph(dateArr,expressArr,groundArr,exportArr,importArr) {
       Chart.defaults.global.defaultFontColor = 'black'
       new Chart(document.getElementById("myChart"), {
         type: 'line',
         legendText: "cross",
         data: {
-          labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+          labels: dateArr,
           datasets: [{
-            data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
+            data: expressArr,
             label: "Express",
             borderColor: "#86B281",
             backgroundColor: "#86b281",
             fill: false
           }, {
-            data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 5267],
+            data: groundArr,
             label: "Ground",
             borderColor: "#bc8d88",
             backgroundColor: "#bc8d88",
             fill: false
           }, {
-            data: [168, 170, 178, 190, 203, 276, 408, 547, 675, 734],
+            data: exportArr,
             label: "Intl Export",
             borderColor: "#9DB3D5",
             backgroundColor: "#9DB3D5",
             fill: false
           }, {
-            data: [40, 20, 10, 16, 24, 38, 74, 167, 508, 784],
+            data: importArr,
             label: "Intl Import",
             borderColor: "#637885",
             backgroundColor: "#637885",
@@ -313,6 +343,15 @@
           legend: {
             position: 'bottom',
             markerColor: "circle"
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                callback: function (tick) {
+                  return tick.toString() + '%';
+                }
+              }
+            }]
           }
         }
       })
