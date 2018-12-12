@@ -196,35 +196,35 @@
         .then(r => {
           r.sort((a, b) => a.effective_date > b.effective_date ? 1 : -1)
 
-          let dateArr=[]
-          let expressArr=[]
-          let groundArr=[]
-          let exportArr =[]
-          let importArr= []
+          let dateArr = []
+          let expressArr = []
+          let groundArr = []
+          let exportArr = []
+          let importArr = []
 
-        //
-        r.forEach(elem => {
-           if (dateArr.includes(elem.effective_date) === false) {
-            dateArr.push(elem.effective_date)
-          }
-          
-          switch(elem.indicator){
-            case 'EXPRESS':
-              expressArr.push(elem.percentage*100)
-            break;
-            case 'GROUND':
-              groundArr.push(elem.percentage * 100)
-            break;
-            case 'INTL EXPORT':
-              exportArr.push(elem.percentage * 100)
-            break;
-            case 'INTL IMPORT':
-              importArr.push(elem.percentage * 100)
-            break
-          }
-        })
+          //
+          r.forEach(elem => {
+            if (dateArr.includes(elem.effective_date) === false) {
+              dateArr.push(elem.effective_date)
+            }
 
-        Graph(dateArr,expressArr,groundArr,exportArr,importArr)
+            switch (elem.indicator) {
+              case 'EXPRESS':
+                expressArr.push(elem.percentage * 100)
+                break;
+              case 'GROUND':
+                groundArr.push(elem.percentage * 100)
+                break;
+              case 'INTL EXPORT':
+                exportArr.push(elem.percentage * 100)
+                break;
+              case 'INTL IMPORT':
+                importArr.push(elem.percentage * 100)
+                break
+            }
+          })
+
+          Graph(dateArr, expressArr, groundArr, exportArr, importArr)
 
         })
         .catch(e => console.log(e))
@@ -243,10 +243,18 @@
 
           // Result Logic/Output
           if (r.length === 0) {
+
+            let updateDate
+            if (moment().format("dddd") === "Friday" && moment().format("HH:mm") >= "12:00") {
+              updateDate = moment().day(12).format("dddd MM/DD/YYYY")
+            } else {
+             updateDate=moment().day(5).format("dddd MM/DD/YYYY")
+            }
+            
             document.querySelector('.resultInfo').innerHTML =
               `
             Everything is up-to-date! The next avialable update will be on <br><br>
-            ${moment().day(5).format("dddd MM/DD/YYYY")}, 12:00PM PST <br><br>
+            ${updateDate}, 12:00PM PST <br><br>
             For the Date Range: <br><br>
             ${moment().day(8).format("MM/DD/YYYY")} - ${moment().day(14).format("MM/DD/YYYY")}
              `
@@ -300,13 +308,13 @@
       if (customStartDate > customEndDate || customEndDate === "Invalid date" || customStartDate === "Invalid date") {
         document.querySelector('#invalidDate').innerHTML = `Invalid Date. Please select a correct date range.`
       } else {
-        fuelhistoryData(customStartDate,customEndDate)
-        document.querySelector('#invalidDate').innerHTML =''
+        fuelhistoryData(customStartDate, customEndDate)
+        document.querySelector('#invalidDate').innerHTML = ''
       }
     }
 
     // Graph Funcation
-    function Graph(dateArr,expressArr,groundArr,exportArr,importArr) {
+    function Graph(dateArr, expressArr, groundArr, exportArr, importArr) {
       Chart.defaults.global.defaultFontColor = 'black'
       new Chart(document.getElementById("myChart"), {
         type: 'line',
