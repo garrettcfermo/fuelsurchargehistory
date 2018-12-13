@@ -84,48 +84,7 @@
           <th class="edit">Update</th>
         </tr>
       </thead>
-
-      <tbody>
-        <tr>
-          <td class="effectiveDate">2018-12-03</td>
-          <td>5%</td>
-          <td>6%</td>
-          <td>7%</td>
-          <td>8%</td>
-          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
-                class="material-icons">edit</i></a>
-          </td>
-        </tr>
-        <tr>
-          <td class="effectiveDate">2018-12-03</td>
-          <td>5%</td>
-          <td>6%</td>
-          <td>7%</td>
-          <td>8%</td>
-          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
-                class="material-icons">edit</i></a>
-          </td>
-        </tr>
-        <tr>
-          <td class="effectiveDate">2018-12-03</td>
-          <td>5%</td>
-          <td>6%</td>
-          <td>7%</td>
-          <td>8%</td>
-          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
-                class="material-icons">edit</i></a>
-          </td>
-        </tr>
-        <tr>
-          <td class="effectiveDate">2018-12-03</td>
-          <td>5%</td>
-          <td>6%</td>
-          <td>7%</td>
-          <td>8%</td>
-          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i
-                class="material-icons">edit</i></a>
-          </td>
-        </tr>
+      <tbody class="tableInfo">
       </tbody>
     </table>
   </div>
@@ -196,13 +155,17 @@
         .then(r => {
           r.sort((a, b) => a.effective_date > b.effective_date ? 1 : -1)
 
+          // Looping thru to put together Graph Data
           let dateArr = []
           let expressArr = []
+          let expressKeyArr = []
           let groundArr = []
+          let groundKeyArr = []
           let exportArr = []
+          let exportKeyArr = []
           let importArr = []
+          let importKeyArr = []
 
-          //
           r.forEach(elem => {
             if (dateArr.includes(elem.effective_date) === false) {
               dateArr.push(elem.effective_date)
@@ -210,21 +173,29 @@
 
             switch (elem.indicator) {
               case 'EXPRESS':
-                expressArr.push(elem.percentage * 100)
+                expressArr.push(Math.round((elem.percentage * 100) * 100) / 100)
+                expressKeyArr.push(elem._id)
                 break;
               case 'GROUND':
-                groundArr.push(elem.percentage * 100)
+                groundArr.push(Math.round((elem.percentage * 100) * 100) / 100)
+                groundKeyArr.push(elem._id)
                 break;
               case 'INTL EXPORT':
-                exportArr.push(elem.percentage * 100)
+                exportArr.push(Math.round((elem.percentage * 100) * 100) / 100)
+                exportKeyArr.push(elem._id)
                 break;
               case 'INTL IMPORT':
-                importArr.push(elem.percentage * 100)
+                importArr.push(Math.round((elem.percentage * 100) * 100) / 100)
+                importKeyArr.push(elem._id)
                 break
             }
           })
 
           Graph(dateArr, expressArr, groundArr, exportArr, importArr)
+
+          tableCreation(dateArr, expressArr, expressKeyArr, groundArr, groundKeyArr, exportArr, exportKeyArr,
+            importArr, importKeyArr)
+
 
         })
         .catch(e => console.log(e))
@@ -248,9 +219,9 @@
             if (moment().format("dddd") === "Friday" && moment().format("HH:mm") >= "12:00") {
               updateDate = moment().day(12).format("dddd MM/DD/YYYY")
             } else {
-             updateDate=moment().day(5).format("dddd MM/DD/YYYY")
+              updateDate = moment().day(5).format("dddd MM/DD/YYYY")
             }
-            
+
             document.querySelector('.resultInfo').innerHTML =
               `
             Everything is up-to-date! The next avialable update will be on <br><br>
@@ -299,7 +270,6 @@
     function closeSync() {
       document.querySelector('.resultInfo').innerHTML = ''
     }
-
 
     // Custom Date Filter
     function customDate() {
@@ -364,8 +334,29 @@
         }
       })
     }
-
     Graph()
+
+    // Table Creation Function
+    function tableCreation(dateArr, expressArr, expressKeyArr, groundArr, groundKeyArr, exportArr, exportKeyArr,
+      importArr, importKeyArr) {
+
+      document.querySelector('.tableInfo').innerHTML=''
+
+      for (let i = 0; i <= dateArr.length - 1; i++) {
+        let listItem = document.createElement('tr')
+        listItem.innerHTML =
+          `
+          <td class="effectiveDate">${dateArr[i]}</td>
+          <td value=${expressKeyArr[i]}>${expressArr[i]}%</td>
+          <td value=${groundKeyArr[i]}>${groundArr[i]}%</td>
+          <td value=${exportKeyArr[i]}>${exportArr[i]}%</td>
+          <td value=${importKeyArr[i]}>${importArr[i]}%</td>
+          <td class="edit"> <a class=" waves-effect waves-light btn red lighten-2 modal-trigger" href="#modal2"><i class="material-icons">edit</i></a>
+          </td>
+        `
+        document.querySelector('.tableInfo').appendChild(listItem)
+      }
+    }
 
     // Materialize Code to make Modals Work
     $(document).ready(function () {
