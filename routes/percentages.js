@@ -94,17 +94,21 @@ module.exports = app => {
       .catch(e => console.log(e))
   })
 
-  // app.get('/surfboards/:id', (req, res) => {
-  //   db.surfboards.findOne({ where: { id: req.params.id } })
-  //     .then(r => res.json(r))
-  //     .catch(e => console.log(e))
-  // })
-
-  // app.post('/surfboards', (req, res) => {
-  //   db.surfboards.create(req.body)
-  //     .then(() => res.sendStatus(200))
-  //     .catch(e => console.log(e))
-  // })
+  app.post('/percentages', (req, res) => {
+    // Checks if record is already in DB
+    db.find({
+      effective_date: req.body.effective_date,
+      indicator: req.body.indicator,
+      vendor_name: "FEDEX"
+    })
+      .then(r => {
+        if (r.length === 0) {
+          db.create(req.body)
+        }
+      })
+      .then(() => res.sendStatus(200))
+      .catch(e => console.log(e))
+  })
 
   // app.put('/surfboards/:id', (req, res) => {
   //   db.surfboards.update(req.body, { where: { id: req.params.id } })

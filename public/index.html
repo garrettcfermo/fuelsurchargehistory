@@ -24,8 +24,50 @@
     <a class="waves-effect waves-light btn btn-small blue-grey darken-2 modal-trigger" href="#modal"><i class="material-icons">date_range</i></a>
     <a onclick="updateFSC()" class="waves-effect waves-light btn btn-small green darken-2 modal-trigger" href="#modal1"><i
         class="material-icons">sync</i></a>
+    <a onclick="" class="waves-effect waves-light btn btn-small red lighten-2 modal-trigger" href="#modal3"><i class="material-icons">add</i></a>
     <hr>
   </div>
+
+  <!-- Add Fsc Percentage -->
+  <div id="modal3" class="modal">
+    <div class="modal-content">
+      <h4>Add FSC Percentage</h4>
+      <hr>
+      <br>
+      <div>
+        <div class="row">
+          <div class="s8 input-field">
+            <p>Effective Date</p>
+            <input id="newEffectiveDate" type="date" placeholder="">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field">
+            <select id="newIndicator">
+              <option value="" disabled selected>Choose your option</option>
+              <option value="EXPRESS">Express</option>
+              <option value="GROUND">Ground</option>
+              <option value="INTL EXPORT">Intl Export</option>
+              <option value="INTL IMPORT">Intl Import</option>
+            </select>
+            <label>Indicator</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="s8 input-field">
+            <p>Percentage (Needs to be in decimal form)</p>
+            <input id="newPercentage" type="text" placeholder="0.055">
+          </div>
+        </div>
+        <div class="invalidInput" style="color:red"></div>
+      </div>
+    </div>
+    <div class="center" style="margin-bottom:10px">
+      <a href="#!" onclick="addPercentage()" class="modal-close waves-effect waves-green btn green darken-2">Submit</a>
+      <a href="#!" class="modal-close waves-effect waves-gray btn blue-grey">Close</a>
+    </div>
+  </div>
+
 
   <!-- Scrap Data Modal Structure -->
   <div id="modal1" class="modal">
@@ -100,22 +142,22 @@
         <form class="col s12">
           <div class="row">
             <div class="input-field col s6">
-              <input value="5%" id="icon_prefix" type="text" class="validate">
-              <label for="icon_prefix">Express</label>
+              <input value="5%" id="" type="text" class="validate">
+              <label for="">Express</label>
             </div>
             <div class="input-field col s6">
-              <input value="6%" id="icon_telephone" type="tel" class="validate">
-              <label for="icon_telephone">Ground</label>
+              <input value="6%" id="" type="tel" class="validate">
+              <label for="">Ground</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s6">
-              <input value="5%" id="icon_prefix" type="text" class="validate">
-              <label for="icon_prefix">International Export</label>
+              <input value="5%" id="" type="text" class="validate">
+              <label for="i">International Export</label>
             </div>
             <div class="input-field col s6">
-              <input value="6%" id="icon_telephone" type="tel" class="validate">
-              <label for="icon_telephone">International Import</label>
+              <input value="6%" id="" type="tel" class="validate">
+              <label for="">International Import</label>
             </div>
           </div>
         </form>
@@ -340,7 +382,7 @@
     function tableCreation(dateArr, expressArr, expressKeyArr, groundArr, groundKeyArr, exportArr, exportKeyArr,
       importArr, importKeyArr) {
 
-      document.querySelector('.tableInfo').innerHTML=''
+      document.querySelector('.tableInfo').innerHTML = ''
 
       for (let i = 0; i <= dateArr.length - 1; i++) {
         let listItem = document.createElement('tr')
@@ -358,7 +400,45 @@
       }
     }
 
+    // Add a Percentage
+    function addPercentage() {
+      event.preventDefault()
+
+      if (document.querySelector('#newPercentage').value > 1 ||
+        document.querySelector('#newPercentage').value === "" ||
+        document.querySelector('#newEffectiveDate').value === "" ||
+        document.querySelector('#newIndicator').value === ""
+      ) {
+        document.querySelector('.invalidInput').innerHTML = `Incorrect input.Please update and try to submit again!`
+      } else {
+
+        fetch('/percentages', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          body: JSON.stringify({
+            createdAt: moment().format("YYYY-MM-DD"),
+            updatedAt: moment().format("YYYY-MM-DD"),
+            vendor_name: "FEDEX",
+            effective_date: document.querySelector('#newEffectiveDate').value,
+            indicator: document.querySelector('#newIndicator').value,
+            percentage: document.querySelector('#newPercentage').value
+          })
+        }).then(r => {
+          document.querySelector('#newEffectiveDate').value = ""
+          document.querySelector('#newPercentage').value = ""
+          document.querySelector('#newIndicator').value = "Choose your option"
+          document.querySelector('.invalidInput').innerHTML = ''
+          fuelhistoryData(startDate,endDate)
+        }).catch(e => console.log(e))
+      }
+    }
+
     // Materialize Code to make Modals Work
+    $(document).ready(function () {
+      $('select').material_select();
+    });
     $(document).ready(function () {
       $('.modal').modal()
     })
