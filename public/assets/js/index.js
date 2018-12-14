@@ -108,7 +108,7 @@ function updateFSC() {
 
         document.querySelector('.resultInfo').innerHTML =
           `
-            There were a total of ${r.length} records updated! Please is the update information below: <br><br>
+            There were a total of ${r.length} records updated! Please see the update information below: <br><br>
             Date Range: ${moment(r[r.length - 1].effective_date).format("MM/DD/YYYY")} - ${moment(r[0].effective_date).format("MM/DD/YYYY")}<br><br>
             Express: ${expressCount} <br><br>
             Ground: ${groundCount} <br><br>
