@@ -29,7 +29,15 @@ module.exports = app => {
         })
 
         // Cleaning the Data
+        
         data = (data[0].split('\n'))
+
+        if(moment(data[1],"MMM Do YYYY").isValid()){
+          data[0] = data[0]+data[1]
+          data.splice(1,1)
+        }
+        
+                
         var start_date = moment(data[0].split('–')[0], "MMM Do YYYY").subtract(1, 'days')
         var end_date = moment(data[0].split('–')[1], "MMM Do YYYY")
         var day_diff = end_date.diff(start_date, 'days')
