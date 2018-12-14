@@ -409,19 +409,23 @@
       if (e.target && e.target.id === "editBtn") {
         let editEffectiveDate = document.querySelector(`#effectiveDate_${e.target.getAttribute('value')}`).innerHTML
 
-        let editExpressVal = parseFloat(document.querySelector(`#express_${e.target.getAttribute('value')}`).innerHTML.split('%')) /100
+        let editExpressVal = parseFloat(document.querySelector(`#express_${e.target.getAttribute('value')}`).innerHTML
+          .split('%')) / 100
         let editExpressKey = document.querySelector(`#express_${e.target.getAttribute('value')}`).getAttribute(
           'value')
 
-        let editGroundVal = parseFloat(document.querySelector(`#ground_${e.target.getAttribute('value')}`).innerHTML.split('%')) /100
+        let editGroundVal = parseFloat(document.querySelector(`#ground_${e.target.getAttribute('value')}`).innerHTML
+          .split('%')) / 100
         let editGroundKey = document.querySelector(`#ground_${e.target.getAttribute('value')}`).getAttribute(
           'value')
 
-        let editExportVal = parseFloat(document.querySelector(`#export_${e.target.getAttribute('value')}`).innerHTML.split('%')) /100        
+        let editExportVal = parseFloat(document.querySelector(`#export_${e.target.getAttribute('value')}`).innerHTML
+          .split('%')) / 100
         let editExportKey = document.querySelector(`#export_${e.target.getAttribute('value')}`).getAttribute(
           'value')
 
-        let editImportVal = parseFloat(document.querySelector(`#import_${e.target.getAttribute('value')}`).innerHTML.split("%")) /100
+        let editImportVal = parseFloat(document.querySelector(`#import_${e.target.getAttribute('value')}`).innerHTML
+          .split("%")) / 100
         let editImportKey = document.querySelector(`#import_${e.target.getAttribute('value')}`).getAttribute(
           'value')
 
@@ -456,15 +460,44 @@
             </form>
           </div>
         <div class="center">
-          <a href="#!" class="modal-close waves-effect waves-green btn green darken-2">Save</a>
+          <a href="#!" onClick="saveBTN()"class="modal-close waves-effect waves-green btn green darken-2">Save</a>
           <a href="#!" class="modal-close waves-effect waves-gray btn blue-grey">Close</a>
         </div>
         `
       }
     })
 
+    // Update (Save) Btn 
+    function saveBTN() {
+      let editExpressVal = document.querySelector("#editExpress").value
+      let editExpressKey = document.querySelector("#editExpress").getAttribute('data-key')
+      fscUpdate(editExpressKey, editExpressVal)
 
+      let editGroundVal = document.querySelector("#editGround").value
+      let editGroundKey = document.querySelector("#editGround").getAttribute('data-key')
+      fscUpdate(editGroundKey,editGroundVal)
 
+      let editExportVal = document.querySelector("#editExport").value
+      let editExportKey = document.querySelector("#editExport").getAttribute('data-key')
+      fscUpdate(editExportKey,editExportVal)
+
+      let editImportVal = document.querySelector("#editImport").value
+      let editImportKey = document.querySelector("#editImport").getAttribute('data-key')
+      fscUpdate(editImportKey,editImportVal)
+    }
+
+    // Update One Entry 
+    function fscUpdate(id, updatedPercentage) {
+      fetch(`/percentage/${id}`, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify({
+          percentage: updatedPercentage
+        })
+      }).then(r => fuelhistoryData(startDate, endDate))
+    }
 
     // Materialize Code to make Modals Work
     $(document).ready(function () {

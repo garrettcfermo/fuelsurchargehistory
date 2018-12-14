@@ -110,22 +110,12 @@ module.exports = app => {
       .catch(e => console.log(e))
   })
 
-  // app.put('/surfboards/:id', (req, res) => {
-  //   db.surfboards.update(req.body, { where: { id: req.params.id } })
-  //     .then(() => res.sendStatus(200))
-  //     .catch(e => console.log(e))
-  // })
-
-  // app.delete('/surfboards/:id', (req, res) => {
-  //   db.surfboards.destroy({ where: { id: req.params.id } })
-  //     .then(() => res.sendStatus(200))
-  //     .catch(e => console.log(e))
-  // })
-
-  // app.delete('/surfboards', (req, res) => {
-  //   db.surfboards.destroy({ where: {}, truncate: true })
-  //     .then(() => res.sendStatus(200))
-  //     .catch(e => console.log(e))
-  // })
+  app.put('/percentage/:id', (req, res) => {
+    db.update({ _id: req.params.id },{$set: req.body}, function(e,r){
+      if(e){console.log(e)}
+      res.sendStatus(200)
+    })
+  })
+  
 }
 
