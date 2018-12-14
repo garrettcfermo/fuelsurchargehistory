@@ -117,5 +117,13 @@ module.exports = app => {
     })
   })
   
+  app.delete('/percentage/:id', (req, res) => {
+    db.deleteOne({ _id: req.params.id}, function (e,r){
+      if (e) { console.log(e) }
+      res.sendStatus(200)
+    })
+  })
+
+
 }
 

@@ -272,6 +272,7 @@
             Intl Import: ${importCount} <br><br>
             `
           }
+          fuelhistoryData(startDate,endDate)
         })
         .catch(e => console.log(e))
     }
@@ -461,7 +462,7 @@
           </div>
         <div class="center">
           <a href="#!" onClick="saveBTN()"class="modal-close waves-effect waves-green btn green darken-2">Update</a>
-<a href="#!" class="modal-close waves-effect waves-brown btn deep-orange darken-4">Delete</a>
+          <a href="#!" onClick="deleteBTN()" class="modal-close waves-effect waves-brown btn deep-orange darken-4">Delete</a>
           <a href="#!" class="modal-close waves-effect waves-gray btn blue-grey">Close</a>
         </div>
         `
@@ -476,16 +477,17 @@
 
       let editGroundVal = document.querySelector("#editGround").value
       let editGroundKey = document.querySelector("#editGround").getAttribute('data-key')
-      fscUpdate(editGroundKey,editGroundVal)
+      fscUpdate(editGroundKey, editGroundVal)
 
       let editExportVal = document.querySelector("#editExport").value
       let editExportKey = document.querySelector("#editExport").getAttribute('data-key')
-      fscUpdate(editExportKey,editExportVal)
+      fscUpdate(editExportKey, editExportVal)
 
       let editImportVal = document.querySelector("#editImport").value
       let editImportKey = document.querySelector("#editImport").getAttribute('data-key')
-      fscUpdate(editImportKey,editImportVal)
+      fscUpdate(editImportKey, editImportVal)
     }
+
 
     // Update One Entry 
     function fscUpdate(id, updatedPercentage) {
@@ -497,7 +499,28 @@
         body: JSON.stringify({
           percentage: updatedPercentage
         })
-      }).then(r => fuelhistoryData(startDate, endDate))
+      }).then(r => fuelhistoryData(startDate, endDate)).catch(e => console.log(e))
+    }
+
+    // Delete Btn
+    function deleteBTN() {
+      let editExpressKey = document.querySelector("#editExpress").getAttribute('data-key')
+      let editGroundKey = document.querySelector("#editGround").getAttribute('data-key')
+      let editExportKey = document.querySelector("#editExport").getAttribute('data-key')
+      let editImportKey = document.querySelector("#editImport").getAttribute('data-key')
+      fscDelete(editExpressKey)
+      fscDelete(editGroundKey)
+      fscDelete(editExportKey)
+      fscDelete(editImportKey)
+      fuelhistoryData(startDate, endDate)
+    }
+
+
+    // Delete a percentage
+    function fscDelete(id) {
+      fetch(`/percentage/${id}`, {
+        method: 'DELETE'
+      }).then(r => {console.log(r)}).catch(e => console.log(e))
     }
 
     // Materialize Code to make Modals Work
