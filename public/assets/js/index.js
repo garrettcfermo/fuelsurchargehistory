@@ -81,7 +81,7 @@ function updateFSC() {
             Everything is up-to-date! The next avialable update will be on <br><br>
             ${updateDate}, 12:00PM PST <br><br>
             For the Date Range: <br><br>
-            ${moment().day(15).format("MM/DD/YYYY")} - ${moment().day(21).format("MM/DD/YYYY")}
+            ${moment(updateDate, "dddd MM/DD/YYYY").add(3, 'days').format("MM/DD/YYYY")} - ${moment(updateDate, "dddd MM/DD/YYYY").add(10, 'days').format("MM/DD/YYYY")}
              `
       } else {
 
